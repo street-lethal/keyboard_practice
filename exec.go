@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"math/rand"
 	"os"
@@ -10,17 +11,24 @@ import (
 )
 
 var (
-	CHARS = []string{
-		"!", "@", "#", "$", "%",
-		"^", "&", "*", "(", ")",
-		"-", "_", "=", "[", "]",
-		"{", "}", "\\", "|", ";",
-		":", "'", "\"", "<", ">",
-		"/", "?",
+	SHORT_CHARS = []string{
+		"@", "^", "&", "*", "(",
+		")", "-", "_", "=", "[",
+		"]", "{", "}", "\\", "|",
+		";", ":", "'", "\"",
+	}
+	ADDITIONAL_CHARS = []string{
+		"!", "#", "$", "%", "<", ">", "/", "?",
 	}
 )
 
+var (
+	SHORT_MODE = flag.Bool("short", false, "")
+)
+
 func main() {
+	flag.Parse()
+
 	score := 0
 
 	rand.Seed(time.Now().UnixNano())
@@ -37,7 +45,12 @@ func main() {
 	}
 	defer term.Restore(int(os.Stdin.Fd()), oldState)
 
-	chars := CHARS
+	var chars []string
+	if *SHORT_MODE {
+		chars = SHORT_CHARS
+	} else {
+		chars = append(SHORT_CHARS, ADDITIONAL_CHARS...)
+	}
 	rand.Seed(time.Now().UnixNano())
 	rand.Shuffle(len(chars), func(i, j int) { chars[i], chars[j] = chars[j], chars[i] })
 
