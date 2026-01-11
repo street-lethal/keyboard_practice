@@ -26,5 +26,14 @@ init-mac:
 	ln -s bin/main_mac main
 	touch failure.csv
 
-exec-s:
+full:
+	./main
+
+short:
+	./main -short=true
+
+full-s:
 	goenv exec go run exec.go
+
+short-s:
+	goenv exec go run exec.go -short=true
