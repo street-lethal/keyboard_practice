@@ -56,7 +56,7 @@ func main() {
 	elapsed := time.Since(started)
 
 	fmt.Print("=========\r\n")
-	fmt.Printf("%d %%\r\n", (score*100)/len(chars))
+	fmt.Printf("%d / %d (%d%%)\r\n", score, len(chars), (score*100)/len(chars))
 	fmt.Printf("%.2f seconds\r\n", elapsed.Seconds())
 }
 
