@@ -11,15 +11,8 @@ import (
 )
 
 var (
-	SHORT_CHARS = []string{
-		"@", "^", "&", "*", "(",
-		")", "-", "_", "=", "[",
-		"]", "{", "}", "\\", "|",
-		";", ":", "'", "\"",
-	}
-	ADDITIONAL_CHARS = []string{
-		"!", "#", "$", "%", "<", ">", "/", "?",
-	}
+	SHORT_CHARS      = "@^&*()-_=[]{}\\|;:'\""
+	ADDITIONAL_CHARS = "!#$%<>/?"
 )
 
 var (
@@ -45,18 +38,18 @@ func main() {
 	}
 	defer term.Restore(int(os.Stdin.Fd()), oldState)
 
-	var chars []string
+	var chars []byte
 	if *SHORT_MODE {
-		chars = SHORT_CHARS
+		chars = []byte(SHORT_CHARS)
 	} else {
-		chars = append(SHORT_CHARS, ADDITIONAL_CHARS...)
+		chars = []byte(SHORT_CHARS + ADDITIONAL_CHARS)
 	}
 	rand.Seed(time.Now().UnixNano())
 	rand.Shuffle(len(chars), func(i, j int) { chars[i], chars[j] = chars[j], chars[i] })
 
 	started := time.Now()
 	for _, char := range chars {
-		if test(char[0], file) {
+		if test(char, file) {
 			score++
 		}
 	}
