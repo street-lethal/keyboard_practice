@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	SHORT_CHARS      = "@^&*()-_=[]{}\\|;:'\""
+	SHORT_CHARS      = "@^&*()-_=+[]{}\\|;:'\""
 	ADDITIONAL_CHARS = "!#$%<>/?"
 )
 
