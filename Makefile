@@ -17,14 +17,14 @@ init-linux:
 		unlink main; \
 	fi
 	ln -s bin/main_linux main
-	touch failure.csv
+	touch data/failure.csv data/full.csv data/short.csv
 
 init-mac:
 	if [ -e main ]; then \
 		unlink main; \
 	fi
 	ln -s bin/main_mac main
-	touch failure.csv
+	touch data/failure.csv data/full.csv data/short.csv
 
 full:
 	./main

@@ -26,7 +26,7 @@ func main() {
 
 	rand.Seed(time.Now().UnixNano())
 
-	file, err := os.OpenFile("failure.csv", os.O_APPEND|os.O_WRONLY, 0644)
+	file, err := os.OpenFile("data/failure.csv", os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		panic(err)
 	}
@@ -39,10 +39,13 @@ func main() {
 	defer term.Restore(int(os.Stdin.Fd()), oldState)
 
 	var chars []byte
+	var logFileName string
 	if *SHORT_MODE {
 		chars = []byte(SHORT_CHARS)
+		logFileName = "data/short.csv"
 	} else {
 		chars = []byte(SHORT_CHARS + ADDITIONAL_CHARS)
+		logFileName = "data/full.csv"
 	}
 	rand.Seed(time.Now().UnixNano())
 	rand.Shuffle(len(chars), func(i, j int) { chars[i], chars[j] = chars[j], chars[i] })
@@ -58,6 +61,7 @@ func main() {
 	fmt.Print("=========\r\n")
 	fmt.Printf("%d / %d (%d%%)\r\n", score, len(chars), (score*100)/len(chars))
 	fmt.Printf("%.2f seconds\r\n", elapsed.Seconds())
+	logScore(logFileName, score, len(chars), elapsed.Seconds())
 }
 
 func test(expected uint8, file *os.File) bool {
@@ -82,4 +86,19 @@ func test(expected uint8, file *os.File) bool {
 	}
 
 	return true
+}
+
+func logScore(fileName string, score, total int, seconds float64) {
+	file, err := os.OpenFile(fileName, os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	if _, err := fmt.Fprintf(
+		file, "%d,%d,%.1f,%v\n", score, total, seconds,
+		time.Now().Format("2006-01-02 15:04:05"),
+	); err != nil {
+		panic(err)
+	}
 }
