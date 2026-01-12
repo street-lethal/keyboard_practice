@@ -37,3 +37,6 @@ full-s:
 
 short-s:
 	goenv exec go run exec.go -short=true
+
+history:
+	rbenv exec ruby show_history.rb
